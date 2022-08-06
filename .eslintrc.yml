@@ -1,0 +1,8 @@
+env:
+  browser: true
+extends:
+  - midient
+rules:
+  max-len: 
+    - code: 120
+  

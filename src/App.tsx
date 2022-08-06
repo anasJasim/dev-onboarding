@@ -1,8 +1,8 @@
 import React, {ChangeEventHandler, FormEventHandler, MouseEventHandler, useState} from 'react';
 import {idGeneratorService} from './application/idGeneratorService';
 import {PersistenceService} from './application/persistenceService';
-import {useTodoStorageService} from './services/todoStorageAdapter';
 import {useIntroductionService} from './services/useIntroductionService';
+import {useTodoStorageService} from './services/useTodoStorageService';
 
 function App(props: {persistence: PersistenceService; idGen: idGeneratorService}) {
   const tss = useTodoStorageService(props.persistence, props.idGen);
@@ -23,7 +23,7 @@ function App(props: {persistence: PersistenceService; idGen: idGeneratorService}
   };
   const submitHandler: FormEventHandler = (e) => {
     e.preventDefault();
-    tss.addTodo({text: newTodo});
+    tss.addTodo({text: newTodo, id: ''});
     setAdding(false);
     setNewTodo('');
   };
