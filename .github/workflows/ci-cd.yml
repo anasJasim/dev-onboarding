@@ -26,6 +26,9 @@ jobs:
 
     - name: Build
       run: npm test
+      
+    - name: remove package-lock.json
+      run: rm package-lock.json
 
     - name: Deploy to heroku
       uses: akhileshns/heroku-deploy@v3.12.12
