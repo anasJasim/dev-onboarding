@@ -1,10 +1,11 @@
 import {idGeneratorService} from '@/application/idGeneratorService';
 import {PersistenceService} from '@/application/persistenceService';
 import {Todo} from '@/domain/todo/todo';
+import {TodoStorageService} from '@/domain/todo/todoStorageService';
 import {useEffect, useState} from 'react';
 
 const TODOS = 'todos';
-export function useTodoStorageService(persistence: PersistenceService, idGen: idGeneratorService) {
+export function useTodoStorageService(persistence: PersistenceService, idGen: idGeneratorService): TodoStorageService {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [loaded, setLoaded] = useState<Boolean>(false);
 
