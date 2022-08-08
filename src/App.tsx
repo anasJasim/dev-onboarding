@@ -37,8 +37,8 @@ function App(props: {persistence: PersistenceService; idGen: idGeneratorService}
 
       {isAdding && (
         <form onSubmit={submitHandler} style={{margin: '12px'}}>
-          <input type="text" onChange={todoInputHandler} />
-          <input type="submit" />
+          <input type="text" onChange={todoInputHandler} role="textbox" />
+          <input type="submit" role="submit" />
         </form>
       )}
 
