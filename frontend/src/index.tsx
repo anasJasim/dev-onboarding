@@ -5,14 +5,14 @@ import {idGeneratorService} from './application/idGeneratorService';
 import {PersistenceService} from './application/persistenceService';
 import reportWebVitals from './reportWebVitals';
 import idGeneratorAdapter from './services/idGeneratorAdapter';
-import {LocalStoragePersistenceAdapter} from './services/localStoragePersistenceAdapter';
+import { ServerStoragePersistenceAdapter } from './services/serverStoragePersistenceAdapter';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
 root.render(
   <React.StrictMode>
     <App
-      persistence={new LocalStoragePersistenceAdapter() as PersistenceService}
+      persistence={new ServerStoragePersistenceAdapter() as PersistenceService}
       idGen={idGeneratorAdapter as idGeneratorService}
     />
   </React.StrictMode>,
