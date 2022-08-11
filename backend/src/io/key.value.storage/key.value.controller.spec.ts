@@ -28,7 +28,7 @@ describe("keyValueController", () => {
   });
 
   it("return null for none existing key-value pairs", async () => {
-    expect(keyValueController.get("non existing key")).resolves.toBeNull();
+    expect(keyValueController.get("non existing key")).resolves.toBe("");
   });
 
   it("can delete all values", async () => {
@@ -37,7 +37,7 @@ describe("keyValueController", () => {
 
     await keyValueController.deleteAll();
 
-    expect(keyValueController.get("key")).resolves.toBeNull();
-    expect(keyValueController.get("key2")).resolves.toBeNull();
+    expect(keyValueController.get("key")).resolves.toBe("");
+    expect(keyValueController.get("key2")).resolves.toBe("");
   });
 });

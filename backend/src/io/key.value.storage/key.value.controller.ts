@@ -20,7 +20,7 @@ export class KeyValueController {
 
   @Get(":key")
   async get(@Param("key") key: string) {
-    return await this.keyValueStorage.get(key);
+    return (await this.keyValueStorage.get(key)) || "";
   }
 
   @Post(":key")
