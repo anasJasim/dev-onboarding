@@ -12,7 +12,7 @@ import { KeyValueStorageService } from "src/application/key.value.storage.servic
 export const KEY_VALUE_STORAGE_SERVICE = "KeyValueStorageService";
 
 @Controller("/api/v1/key")
-export class keyValueController {
+export class KeyValueController {
   constructor(
     @Inject(KEY_VALUE_STORAGE_SERVICE)
     private keyValueStorage: KeyValueStorageService
@@ -24,11 +24,8 @@ export class keyValueController {
   }
 
   @Post(":key")
-  async set(
-    @Param("key") key: string,
-    @Body() body: {value: unknown},
-  ) {
-    const value = body.value
+  async set(@Param("key") key: string, @Body() body: { value: unknown }) {
+    const value = body.value;
     return await this.keyValueStorage.set(key, value);
   }
 

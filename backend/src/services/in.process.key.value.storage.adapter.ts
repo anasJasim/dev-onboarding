@@ -5,7 +5,7 @@ export class InProcessKeyValueStorageAdapter implements KeyValueStorageService {
     this.storage = new Map();
   }
   async get(key: string): Promise<string | null> {
-    return await this.storage.get(key);
+    return await (this.storage.get(key) || null);
   }
   async set(key: string, value: unknown): Promise<void> {
     await this.storage.set(key, value);
