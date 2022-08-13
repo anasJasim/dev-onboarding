@@ -37,11 +37,13 @@ services:
   redis:
     image: redis
     container_name: dev_onboarding_redis
+    command: redis-server /usr/local/etc/redis/redis.conf
     restart: always
     ports:
       - "6379:6379"
     volumes:
       - redis:/data
+      - ./config/redis.conf:/usr/local/etc/redis/redis.conf
     networks:
       - dev_onboarding
 
