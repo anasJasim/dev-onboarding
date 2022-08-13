@@ -1,0 +1,55 @@
+version: "3.9"
+services:
+  backend:
+    image: dev_onboarding_backend
+    container_name: dev_onboarding_backend
+    build: ./
+    command: npm run start
+    ports:
+      - "${NODE_PORT}:${NODE_PORT}"
+    restart: unless-stopped
+    environment:
+      NODE_PORT: "${NODE_PORT}"
+      # Postgres
+      POSTGRESS_URL: "${POSTGRESS_URL}"
+      # Redis
+      REDIS_DB_HOST: redis
+      REDIS_DB_PORT: 6379
+    networks:
+      - dev_onboarding
+    depends_on:
+      - postgres
+      - redis
+  postgres:
+    image: postgres
+    container_name: dev_onboarding_postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: dev_onboarding
+      POSTGRES_USER: root
+    volumes:
+      - postgresDB:/var/lib/postgresql
+    networks:
+      - dev_onboarding
+
+  redis:
+    image: redis
+    container_name: dev_onboarding_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis:/data
+    networks:
+      - dev_onboarding
+
+volumes:
+  postgresDB:
+  redis:
+
+
+networks:
+  dev_onboarding:
+    driver: bridge
