@@ -1,12 +1,28 @@
 version: "3.9"
 services:
+  envoy:
+    build: ./config/envoy
+    ports:
+      - "${ENVOY_BACKEND_PORT}:${ENVOY_BACKEND_PORT}"
+      - "${ENVOY_ADMIN_PORT}:${ENVOY_ADMIN_PORT}"
+    environment:
+      SERVICE_NAME: backend
+      DEBUG_LEVEL: debug
+      SERVICE_PORT: "${NODE_PORT}"
+      SERVICE_LISTEN_PORT: "${ENVOY_BACKEND_PORT}"
+      ADMIN_LISTEN_PORT: "${ENVOY_ADMIN_PORT}"
+    volumes:
+      - ./config/envoy/envoy.yaml:/etc/envoy/envoy.yaml
+    networks:
+      - dev_onboarding
+    depends_on:
+      - backend
   backend:
     image: dev_onboarding_backend
-    container_name: dev_onboarding_backend
     build: ./
     command: npm run start
-    ports:
-      - "${NODE_PORT}:${NODE_PORT}"
+    expose:
+      - "${NODE_PORT}"
     restart: unless-stopped
     environment:
       NODE_PORT: "${NODE_PORT}"
@@ -33,7 +49,6 @@ services:
       - postgresDB:/var/lib/postgresql
     networks:
       - dev_onboarding
-
   redis:
     image: redis
     container_name: dev_onboarding_redis
