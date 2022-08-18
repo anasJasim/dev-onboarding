@@ -1,18 +1,17 @@
-import {idGeneratorService} from '@/application/idGeneratorService';
-import {PersistenceService} from '@/application/persistenceService';
 import {Todo} from '@/domain/todo/todo';
+import {TodoApiService} from '@/domain/todo/todoApiService';
 import {TodoStorageService} from '@/domain/todo/todoStorageService';
 import {useEffect, useState} from 'react';
 
 const TODOS = 'todos';
-export function useTodoStorageService(persistence: PersistenceService, idGen: idGeneratorService): TodoStorageService {
+export function useTodoStorageService(todoApiService: TodoApiService): TodoStorageService {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [loaded, setLoaded] = useState<Boolean>(false);
 
   useEffect(() => {
     const fetchTodos = async () => {
       try {
-        const _todos = JSON.parse((await persistence.get(TODOS)) || '[]');
+        const _todos = (await todoApiService.getAll()) || [];
         setTodos(() => _todos);
       } finally {
         setLoaded(true);
@@ -25,18 +24,15 @@ export function useTodoStorageService(persistence: PersistenceService, idGen: id
     todos,
     loaded,
     async addTodo(todo: Todo) {
-      const newTodo: any = {...todo};
-      if (!newTodo.id) {
-        newTodo.id = idGen();
-      }
+      const newTodo = await todoApiService.addTodo(todo);
       const newTodos = [...todos, newTodo];
       setTodos(() => newTodos);
-      await persistence.set(TODOS, JSON.stringify(newTodos));
+      return newTodo
     },
-    async deleteTodo(id: string) {
+    async deleteTodo(id: number) {
+      await todoApiService.deleteTodo(id);
       const newTodos = todos.filter((todo) => todo.id !== id);
       setTodos((todos) => newTodos);
-      await persistence.set(TODOS, JSON.stringify(newTodos));
     },
   };
 }

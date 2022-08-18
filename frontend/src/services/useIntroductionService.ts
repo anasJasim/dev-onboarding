@@ -10,9 +10,8 @@ export function useIntroductionService(persistence: PersistenceService, tss: Tod
       const persistenceDate = await persistence.get(INTRODUCTION_DATE);
       if (!persistenceDate && tss.todos.length === 0) {
         await tss.addTodo({
-          // eslint-disable-next-line max-len
           text: 'This is a simple todo app duh, for more info: https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-          id: '',
+          id: 0,
         });
         await persistence.set(INTRODUCTION_DATE, new Date().toString());
       }

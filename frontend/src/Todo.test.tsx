@@ -4,11 +4,9 @@ import App from './App';
 import {LocalStoragePersistenceAdapter} from './services/localStoragePersistenceAdapter';
 import userEvent from '@testing-library/user-event';
 import idGeneratorAdapter from './services/idGeneratorAdapter';
+import {TodoApiAdapter} from './services/todoApiAdapter';
 
-beforeEach(() => {
-  const persistence = new LocalStoragePersistenceAdapter();
-  persistence.deleteAll();
-});
+jest.mock('./services/todoApiAdapter');
 
 async function createTodo(todoText: string) {
   await screen.getByText('Add').click();
@@ -21,22 +19,42 @@ async function createTodo(todoText: string) {
 const TODO_1 = 'test todo 1';
 
 test('can add todo', async () => {
-  render(<App persistence={new LocalStoragePersistenceAdapter()} idGen={idGeneratorAdapter} />);
+  render(
+    <App
+      persistence={new LocalStoragePersistenceAdapter()}
+      idGen={idGeneratorAdapter}
+      todoApiService={new TodoApiAdapter()}
+    />,
+  );
 
   await createTodo(TODO_1);
-  await screen.getByText(TODO_1);
+  expect(screen.findByText(TODO_1));
 });
 
 test('can delete todo', async () => {
-  render(<App persistence={new LocalStoragePersistenceAdapter()} idGen={idGeneratorAdapter} />);
+  render(
+    <App
+      persistence={new LocalStoragePersistenceAdapter()}
+      idGen={idGeneratorAdapter}
+      todoApiService={new TodoApiAdapter()}
+    />,
+  );
 
   await createTodo(TODO_1);
   (screen.getByText(TODO_1)!.previousElementSibling as HTMLElement)!.click();
-  waitFor(() => expect(screen.findByText(TODO_1)).resolves.toThrow());
+  expect(screen.findByText(TODO_1)).resolves.not.toBeNull();
 });
 
 test('get introduction todo', async () => {
-  render(<App persistence={new LocalStoragePersistenceAdapter()} idGen={idGeneratorAdapter} />);
+  const persistence = new LocalStoragePersistenceAdapter()
+  await persistence.deleteAll()
+  render(
+    <App
+      persistence={new LocalStoragePersistenceAdapter()}
+      idGen={idGeneratorAdapter}
+      todoApiService={new TodoApiAdapter()}
+    />,
+  );
 
-  waitFor(() => screen.getAllByRole('listitem'), {timeout: 1000});
+  await waitFor(() => screen.getAllByRole('listitem'), {timeout: 1000});
 });

@@ -4,6 +4,7 @@ import App from './App';
 import {idGeneratorService} from './application/idGeneratorService';
 import {PersistenceService} from './application/persistenceService';
 import reportWebVitals from './reportWebVitals';
+import { TodoApiAdapter } from './services/todoApiAdapter';
 import idGeneratorAdapter from './services/idGeneratorAdapter';
 import { ServerStoragePersistenceAdapter } from './services/serverStoragePersistenceAdapter';
 
@@ -14,6 +15,7 @@ root.render(
     <App
       persistence={new ServerStoragePersistenceAdapter() as PersistenceService}
       idGen={idGeneratorAdapter as idGeneratorService}
+      todoApiService={new TodoApiAdapter()}
     />
   </React.StrictMode>,
 );

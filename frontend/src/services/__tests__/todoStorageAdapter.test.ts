@@ -1,61 +1,40 @@
+import {Todo} from '@/domain/todo/todo';
 import {renderHook} from '@testing-library/react-hooks';
-import {act} from 'react-dom/test-utils';
-import {idGeneratorService} from '../../application/idGeneratorService';
-import {LocalStoragePersistenceAdapter} from '../localStoragePersistenceAdapter';
+import {TodoApiAdapter} from '../todoApiAdapter';
 import {useTodoStorageService} from '../useTodoStorageService';
 
-const persistence = new LocalStoragePersistenceAdapter();
-let idGen: idGeneratorService;
+const todoApiService = new TodoApiAdapter();
 
 describe('Todo Storage Adapter', () => {
-  beforeEach(async () => {
-    idGen = jest.fn().mockReturnValue('mock-id');
-    await persistence.deleteAll();
-  });
-
   test('loads todos from persistence into local state upon initializating', async () => {
-    const todos = [
-      {id: '1', text: 'todo1'},
-      {id: '2', text: 'todo2'},
-    ];
-    await persistence.set('todos', JSON.stringify(todos));
+    const todo1 = await todoApiService.addTodo({id: 0, text: 'mytodo1'});
+    const todo2 = await todoApiService.addTodo({id: 0, text: 'mytodo2'});
 
-    const {result, waitForNextUpdate} = renderHook(() => useTodoStorageService(persistence, idGen));
+    const {result, waitForNextUpdate} = renderHook(() => useTodoStorageService(todoApiService));
     await waitForNextUpdate();
-    expect(result.current.todos).toStrictEqual(todos);
+    await expect(result.current.todos.find((todo) => todo.id === todo1.id)).toMatchObject({text: 'mytodo1'});
+    await expect(result.current.todos.find((todo) => todo.id === todo2.id)).toMatchObject({text: 'mytodo2'});
   });
 
-  test('provide todos in local state', async () => {
-    const {result, waitForNextUpdate} = renderHook(() => useTodoStorageService(persistence, idGen));
+  test('can add todo', async () => {
+    const {result, waitForNextUpdate} = renderHook(() => useTodoStorageService(todoApiService));
     await waitForNextUpdate();
 
-    expect(result.current.todos).toStrictEqual([]);
+    let todo: Todo;
+    todo = await result.current.addTodo({id: 0, text: 'sample todo'});
+
+    expect(result.current.todos.find((_todo) => _todo.id === todo.id)).toMatchObject({text: 'sample todo'});
   });
 
-  test('creates todo with automatically added ids and persistence', async () => {
-    const {result, waitForNextUpdate} = renderHook(() => useTodoStorageService(persistence, idGen));
+  test('delete todo by id', async () => {
+    const {result, waitForNextUpdate} = renderHook(() => useTodoStorageService(todoApiService));
     await waitForNextUpdate();
 
-    act(async () => {
-      await result.current.addTodo({id: '', text: 'sample todo'});
-    });
+    let todo: Todo;
+    todo = await result.current.addTodo({id: 0, text: 'sample todo'});
 
-    expect(result.current.todos).toStrictEqual([{id: 'mock-id', text: 'sample todo'}]);
-    await expect(persistence.get('todos')).resolves.toBe(JSON.stringify([{id: 'mock-id', text: 'sample todo'}]));
-  });
+    await result.current.deleteTodo(todo.id)
 
-  test('deletes todos by id', async () => {
-    const {result, waitForNextUpdate} = renderHook(() => useTodoStorageService(persistence, idGen));
-    await waitForNextUpdate();
-    act(async () => {
-      await result.current.addTodo({text: 'sample todo', id: ''});
-    });
-
-    act(async () => {
-      await result.current.deleteTodo('mock-id');
-    });
-
-    expect(result.current.todos).toStrictEqual([]);
-    await expect(persistence.get('todos')).resolves.toBe(JSON.stringify([]));
+    expect(result.current.todos.find((_todo) => _todo.id === todo.id)).toBeUndefined();
   });
 });
