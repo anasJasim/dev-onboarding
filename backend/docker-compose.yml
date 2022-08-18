@@ -7,7 +7,7 @@ services:
       - "${ENVOY_ADMIN_PORT}:${ENVOY_ADMIN_PORT}"
     environment:
       SERVICE_NAME: backend
-      DEBUG_LEVEL: debug
+      DEBUG_LEVEL: error
       SERVICE_PORT: "${NODE_PORT}"
       SERVICE_LISTEN_PORT: "${ENVOY_BACKEND_PORT}"
       ADMIN_LISTEN_PORT: "${ENVOY_ADMIN_PORT}"
@@ -27,7 +27,7 @@ services:
     environment:
       NODE_PORT: "${NODE_PORT}"
       # Postgres
-      POSTGRESS_URL: "${POSTGRESS_URL}"
+      POSTGRES_URL: "${POSTGRES_URL}"
       # Redis
       REDIS_DB_HOST: redis
       REDIS_DB_PORT: 6379
@@ -43,8 +43,9 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: dev_onboarding
-      POSTGRES_USER: root
+      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
     volumes:
       - postgresDB:/var/lib/postgresql
     networks:
