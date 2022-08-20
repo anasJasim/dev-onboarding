@@ -2,5 +2,8 @@
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
-  "entryFile": "io/main"
+  "entryFile": "io/main",
+  "compilerOptions": {
+    "plugins": ["@nestjs/graphql"]
+  }
 }

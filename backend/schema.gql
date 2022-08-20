@@ -1,0 +1,19 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type TodoModel {
+  id: Int!
+  text: String!
+}
+
+type Query {
+  todo(id: Int!): TodoModel!
+  todos: [TodoModel!]!
+}
+
+type Mutation {
+  addTodo(id: Int!, text: String!): TodoModel!
+  deleteTodo(id: Int!): TodoModel!
+  deleteAllTodo: Boolean!
+}
