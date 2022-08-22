@@ -8,6 +8,7 @@ import { DatabaseServiceAdapter } from "src/services/database.service.adapter";
 import { TodoModule } from "./todo/todo.module";
 import { GraphQLModule } from "@nestjs/graphql";
 import { MercuriusDriverConfig, MercuriusDriver } from "@nestjs/mercurius";
+import { AuthModule } from "./auth/auth.module";
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { MercuriusDriverConfig, MercuriusDriver } from "@nestjs/mercurius";
     }),
     KeyValueModule,
     TodoModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [

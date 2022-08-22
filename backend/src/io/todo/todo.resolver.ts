@@ -1,11 +1,13 @@
-import { Inject } from "@nestjs/common";
+import { Inject, UseGuards } from "@nestjs/common";
 import { Args, Resolver, Query, Int, Mutation } from "@nestjs/graphql";
 import {
   TodoDbService,
   TODO_DB_SERVICE,
 } from "src/domain/todo/todo.db.service";
+import { JwtAuthGuard } from "../auth/jwt.auth.guard";
 import { TodoModel } from "./todo.model";
 
+@UseGuards(JwtAuthGuard)
 @Resolver((of: any) => TodoModel)
 export class TodoResolver {
   constructor(

@@ -14,3 +14,10 @@ model Todo {
   id   Int    @id @default(autoincrement())
   text String
 }
+
+model User {
+  id            Int    @id @default(autoincrement())
+  name          String
+  username      String @unique
+  password_hash String
+}

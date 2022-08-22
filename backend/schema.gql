@@ -7,6 +7,28 @@ type TodoModel {
   text: String!
 }
 
+type UserModel {
+  id: Int!
+  name: String!
+  username: String!
+}
+
+type SessionModel {
+  expireAt: Float!
+  token: String!
+  refreshToken: String!
+}
+
+type LoginModel {
+  user: UserModel!
+  session: SessionModel!
+}
+
+type SignupModel {
+  user: UserModel!
+  session: SessionModel!
+}
+
 type Query {
   todo(id: Int!): TodoModel!
   todos: [TodoModel!]!
@@ -16,4 +38,7 @@ type Mutation {
   addTodo(id: Int!, text: String!): TodoModel!
   deleteTodo(id: Int!): TodoModel!
   deleteAllTodo: Boolean!
+  signup(name: String!, username: String!, password: String!): SignupModel!
+  login(username: String!, password: String!): LoginModel!
+  refreshToken(refreshToken: String!): SessionModel!
 }
