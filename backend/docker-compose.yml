@@ -5,11 +5,14 @@ services:
     ports:
       - "${ENVOY_BACKEND_PORT}:${ENVOY_BACKEND_PORT}"
       - "${ENVOY_ADMIN_PORT}:${ENVOY_ADMIN_PORT}"
+      - "${ENVOY_BACKEND_WS_PORT}:${ENVOY_BACKEND_WS_PORT}"
     environment:
       SERVICE_NAME: backend
       DEBUG_LEVEL: error
       SERVICE_PORT: "${NODE_PORT}"
+      SERVICE_WS_PORT: "${NODE_WS_PORT}"
       SERVICE_LISTEN_PORT: "${ENVOY_BACKEND_PORT}"
+      SERVICE_LISTEN_WS_PORT: "${ENVOY_BACKEND_WS_PORT}"
       ADMIN_LISTEN_PORT: "${ENVOY_ADMIN_PORT}"
     volumes:
       - ./config/envoy/envoy.yaml:/etc/envoy/envoy.yaml
@@ -23,14 +26,17 @@ services:
     command: npm run start
     expose:
       - "${NODE_PORT}"
+      - "${NODE_WS_PORT}"
     restart: unless-stopped
     environment:
       NODE_PORT: "${NODE_PORT}"
+      NODE_WS_PORT: "${NODE_WS_PORT}"
       # Postgres
       POSTGRES_URL: "${POSTGRES_URL}"
       # Redis
       REDIS_DB_HOST: redis
       REDIS_DB_PORT: 6379
+      KAFKA_IP: ${HOST_IP}
     networks:
       - dev_onboarding
     depends_on:
@@ -60,6 +66,24 @@ services:
     volumes:
       - redis:/data
       - ./config/redis.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      - dev_onboarding
+  zookeeper:
+    image: wurstmeister/zookeeper:latest
+    ports:
+      - "2181:2181"
+    networks:
+      - dev_onboarding
+  kafka:
+    image: wurstmeister/kafka:latest
+    ports:
+      - "9092:9092"
+    links:
+      - zookeeper
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: "kafka"
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      ALLOW_PLAINTEXT_LISTENER: "yes"
     networks:
       - dev_onboarding
 

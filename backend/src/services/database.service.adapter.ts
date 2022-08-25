@@ -1,10 +1,18 @@
-import { Global, INestApplication, Injectable } from "@nestjs/common";
+import {
+  Global,
+  INestApplication,
+  Injectable,
+  OnModuleInit,
+} from "@nestjs/common";
 import { DatabaseService } from "../application/database.service";
 
 @Global()
 @Injectable()
-export class DatabaseServiceAdapter extends DatabaseService {
-  async OnModuleInit() {
+export class DatabaseServiceAdapter
+  extends DatabaseService
+  implements OnModuleInit
+{
+  async onModuleInit() {
     await this.$connect();
   }
 

@@ -26,12 +26,14 @@ export class TodoResolver {
 
   @Mutation((returns) => TodoModel)
   async addTodo(@Args() todo: TodoModel) {
-    return await this.todoDbService.add(todo);
+    const _todo = await this.todoDbService.add(todo);
+    return _todo;
   }
 
   @Mutation((returns) => TodoModel)
   async deleteTodo(@Args("id", { type: () => Int }) id: number) {
-    return await this.todoDbService.delete(id);
+    const todo = await this.todoDbService.delete(id);
+    return todo;
   }
 
   @Mutation((returns) => Boolean)

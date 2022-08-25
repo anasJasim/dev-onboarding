@@ -5,8 +5,11 @@ import { TodoDbServiceAdapter } from "src/services/todo.db.service.adapter";
 import { TodoController } from "./todo.controller";
 import { TODO_DB_SERVICE } from "src/domain/todo/todo.db.service";
 import { TodoResolver } from "./todo.resolver";
+import { PubSubModule } from "../pub.sub/pub.sub.module";
+import { EventsModule } from "../events/events.module";
 
 @Module({
+  imports: [PubSubModule, EventsModule],
   controllers: [TodoController],
   providers: [
     { provide: DATABASE_SERVICE, useClass: DatabaseServiceAdapter },

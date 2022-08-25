@@ -3,6 +3,7 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from "@nestjs/platform-fastify";
+import { WsAdapter } from "@nestjs/platform-ws";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 import { AppModule } from "./app.module";
 
@@ -11,6 +12,8 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter()
   );
+  app.useWebSocketAdapter(new WsAdapter(app));
+
   app.enableCors();
 
   const config = new DocumentBuilder()

@@ -9,9 +9,12 @@ import { TodoModule } from "./todo/todo.module";
 import { GraphQLModule } from "@nestjs/graphql";
 import { MercuriusDriverConfig, MercuriusDriver } from "@nestjs/mercurius";
 import { AuthModule } from "./auth/auth.module";
+import { EventsModule } from "./events/events.module";
+import { PubSubModule } from "./pub.sub/pub.sub.module";
 
 @Module({
   imports: [
+    EventsModule,
     ConfigModule.forRoot(),
     GraphQLModule.forRoot<MercuriusDriverConfig>({
       driver: MercuriusDriver,
@@ -19,6 +22,7 @@ import { AuthModule } from "./auth/auth.module";
       autoSchemaFile: "schema.gql",
     }),
     KeyValueModule,
+    PubSubModule,
     TodoModule,
     AuthModule,
   ],
