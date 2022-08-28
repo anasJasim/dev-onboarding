@@ -1,12 +1,18 @@
 import React, {ChangeEventHandler, FormEventHandler, MouseEventHandler, useState} from 'react';
 import {idGeneratorService} from './application/idGeneratorService';
 import {PersistenceService} from './application/persistenceService';
-import { TodoApiService } from './domain/todo/todoApiService';
+import {TodoApiService} from './domain/todo/todoApiService';
 import {useIntroductionService} from './services/useIntroductionService';
 import {useTodoStorageService} from './services/useTodoStorageService';
+import {WsServiceAdapter} from './services/wsServiceAdapter';
 
-function App(props: {persistence: PersistenceService; idGen: idGeneratorService, todoApiService: TodoApiService}) {
-  const tss = useTodoStorageService(props.todoApiService);
+function App(props: {
+  persistence: PersistenceService;
+  idGen: idGeneratorService;
+  todoApiService: TodoApiService;
+  wsService: WsServiceAdapter;
+}) {
+  const tss = useTodoStorageService(props.todoApiService, props.wsService);
   useIntroductionService(props.persistence, tss);
   const [isAdding, setAdding] = useState(false);
   const [newTodo, setNewTodo] = useState('');
