@@ -39,7 +39,7 @@ export class TodoDbServiceAdapter
               break;
             case "delete-todo":
               {
-                this.eventsGateway.sendToAllClients("remove", value.value);
+                this.eventsGateway.sendToAllClients("delete-todo", value.value);
               }
               break;
             case "delete-all-todos":
